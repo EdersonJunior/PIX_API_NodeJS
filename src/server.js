@@ -17,7 +17,7 @@ const pixKey = "9ffa7831-fe44-409b-8efc-77bd7c61b5be"
 console.log(cert);
 console.log("PIX Server is Running...");
 
-app.post('/create-charge', async (req, res) => {
+app.post('/search-motoboy', async (req, res) => {
     console.log("Gerando cobrança");
     let accessToken = await requestAccessToken();
     let charge = await createCharge(accessToken);
@@ -96,7 +96,7 @@ async function createPaymentLink(accessToken, charge) {
             "tipoCob": "cob"
         }
     }).then(function (response) {
-        paymentLink = JSON.stringify(response.data)
+        paymentLink = JSON.stringify(response.data.qrcode)
         console.log("\n paymentLink \n" + JSON.stringify(paymentLink));
         if (paymentLink.includes("qrcode")) {
             console.log("QR Code gerado com sucesso:\n" + paymentLink);
