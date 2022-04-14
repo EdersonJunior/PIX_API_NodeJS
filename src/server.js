@@ -131,7 +131,7 @@ async function confirmPayment(accessToken, chargeId) {
         //     "tipoCob": "cob"
         // }
     }).then(function (response) {
-        chargeStatus = JSON.stringify(response.data.status)
+        chargeStatus = JSON.stringify(response.data.status).replaceAll('"', "")
         console.log("\n chargeStatus \n" + JSON.stringify(chargeStatus));
         // if (paymentLink.includes("qrcode")) {
         //     console.log("QR Code gerado com sucesso:\n" + paymentLink);
