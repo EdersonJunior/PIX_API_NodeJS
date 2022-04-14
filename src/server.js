@@ -22,8 +22,20 @@ app.post('/search-motoboy', async (req, res) => {
     let accessToken = await requestAccessToken();
     let charge = await createCharge(accessToken);
     let paymentLink = await createPaymentLink(accessToken, charge);
+    let payment = {
+        chargeId: charge.txid,
+        paymentLink
+    }
+    console.log("payment is " + JSON.stringify(payment));
+    res.send(payment);
+})
 
-    res.send(paymentLink);
+app.get('/confirm-payment/:chardeId', async (req, res) => {
+    console.log("Consultando pagamento...");
+    let accessToken = await requestAccessToken();
+    let chargeStatus = await confirmPayment(accessToken, req.params.chardeId);
+
+    res.send(chargeStatus);
 })
 
 async function requestAccessToken() {
@@ -104,6 +116,29 @@ async function createPaymentLink(accessToken, charge) {
       })
     
     return paymentLink
+}
+
+async function confirmPayment(accessToken, chargeId) {
+    await axios({
+        method: "GET",
+        url: `${url}/v2/cob/${chargeId}`,
+        headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type" : "application/json",
+        },
+        httpsAgent: agent,
+        // data: {
+        //     "tipoCob": "cob"
+        // }
+    }).then(function (response) {
+        chargeStatus = JSON.stringify(response.data.status)
+        console.log("\n chargeStatus \n" + JSON.stringify(chargeStatus));
+        // if (paymentLink.includes("qrcode")) {
+        //     console.log("QR Code gerado com sucesso:\n" + paymentLink);
+        // }
+      })
+    
+    return chargeStatus
 }
 
 app.listen(port, () => {
