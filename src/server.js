@@ -17,7 +17,7 @@ const pixKey = "9ffa7831-fe44-409b-8efc-77bd7c61b5be"
 console.log(cert);
 console.log("PIX Server is Running...");
 
-app.post('/search-motoboy', async (req, res) => {
+app.post('/create-payment', async (req, res) => {
     console.log("Gerando cobrança");
     let accessToken = await requestAccessToken();
     let charge = await createCharge(accessToken);
